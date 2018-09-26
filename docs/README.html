@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Website Install</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--readme">
+<header>
+  <div class="pager">
+  <a href="index.html" class="prev index">&laquo;Index</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Website Install</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p><img src="images/screenshot.jpg" alt="install" /></p>
+
+<h2>Summary</h2>
+
+<p>A script to help with installing dependencies and deploying non-versioned files for a website.</p>
+
+<p><strong>Visit <a href="https://aklump.github.io/install">https://aklump.github.io/install</a> for full documentation.</strong></p>
+
+<h2>Quick Start</h2>
+
+<ul>
+<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the <code>.</code></p>
+
+<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d install || (git clone https://github.com/aklump/website-install.git install &amp;&amp; rm -rf install/.git)) &amp;&amp; (test -s $d/bin/install || ln -s $d/opt/install/install.sh $d/bin/install)) &amp;&amp; ./bin/install install
+</code></pre></li>
+<li><p>Open <em>bin/&#95;install.yml</em> and modify as needed.</p></li>
+<li>Open <em>bin/&#95;install.local.yml</em> and ...</li>
+</ul>
+
+<h2>Requirements</h2>
+
+<p>You must have <a href="https://github.com/aklump/cloudy">Cloudy</a> installed on your system to install this package.</p>
+
+<h2>Installation</h2>
+
+<p>The installation script above will generate the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
+
+<pre><code>.
+├── bin
+│   ├── install -&gt; ../opt/install/install.sh
+│   ├── _install.yml
+│   └── _install.local.yml
+└── opt
+    ├── cloudy
+    └── install
+</code></pre>
+
+<h3>To Update</h3>
+
+<ul>
+<li><p>Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
+
+<pre><code>(cd opt &amp;&amp; git clone https://github.com/aklump/website-install.git .updating__install &amp;&amp; rsync -a --delete --exclude=.git* .updating__install/ install/; rm -rf .updating__install)
+</code></pre></li>
+</ul>
+
+<h2>Configuration Files</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Filename</th>
+  <th>Description</th>
+  <th>VCS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><em>&#95;install.yml</em></td>
+  <td>Configuration shared across all server environments: prod, staging, dev</td>
+  <td>yes</td>
+</tr>
+<tr>
+  <td><em>&#95;install.local.yml</em></td>
+  <td>Configuration overrides for a single environment; not version controlled.</td>
+  <td>no</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Custom Configuration</h3>
+
+<ul>
+<li>lorem</li>
+<li>ipsum</li>
+</ul>
+
+<h2>Usage</h2>
+
+<ul>
+<li>To see all commands use <code>./bin/install help</code></li>
+</ul>
+
+<h2>Contributing</h2>
+
+<p>If you find this project useful... please consider <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4E5KZHDQCEUV8&amp;item_name=Gratitude%20for%20aklump%2Fwebsite-install">making a donation</a>.</p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="index.html" class="prev index">&laquo;Index</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 15:46:36 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

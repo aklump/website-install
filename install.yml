@@ -1,0 +1,15 @@
+title: ""
+additional_config:
+default_command: help
+commands:
+  help:
+    help: Show this help screen.
+  clear-cache:
+    aliases: [clearcache, cc]
+    help: Clear all cached data.
+translate:
+  ids:
+    - Completed successfully.
+    - Failed.
+  strings:
+    en:
