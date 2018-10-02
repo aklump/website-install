@@ -15,8 +15,8 @@ commands:
     help: Install in a staging environment.
   dev:
     help: Install in a dev environment.
-  install:
-    help: 'Install local configuration files.'
+  init:
+    help: Initialize this script's configuration files.
 translate:
   ids:
   - Completed successfully.

@@ -1,4 +1,4 @@
 name: aklump/install
 clone_from: https://github.com/aklump/website-install.git
 entry_script: install.sh
-on_install: install
+on_install: init

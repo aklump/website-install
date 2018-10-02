@@ -14,7 +14,7 @@ CONFIG="install.core.yml";
 # TODO: Event handlers and other functions go here or source another file.
 
 function on_pre_config() {
-    [[ "$(get_command)" == "install" ]] && exit_with_install
+    [[ "$(get_command)" == "init" ]] && exit_with_install
 }
 
 ##
