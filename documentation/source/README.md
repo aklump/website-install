@@ -10,10 +10,7 @@ A script to help with installing dependencies and deploying non-versioned files 
 
 ## Quick Start
 
-- Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the `.`
-    
-        (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d install || (git clone https://github.com/aklump/website-install.git install && rm -rf install/.git)) && (test -s $d/bin/install || ln -s $d/opt/install/install.sh $d/bin/install)) && ./bin/install install
-
+- Install in your repository root using `cloudy pm-install aklump/install`
 - Open _bin/\_install.yml_ and modify as needed.
 - Open _bin/\_install.local.yml_ and ...
 
@@ -23,23 +20,24 @@ You must have [Cloudy](https://github.com/aklump/cloudy) installed on your syste
 
 ## Installation
 
-The installation script above will generate the following structure where `.` is a directory above web root and inside your SCM repository.
+The installation script above will generate the following structure where `.` is your repository root.
 
     .
     ├── bin
     │   ├── install -> ../opt/install/install.sh
-    │   ├── _install.yml
-    │   └── _install.local.yml
-    └── opt
-        ├── cloudy
-        └── install
+    │   └── config
+    │       ├── install.yml
+    │       └── install.local.yml
+    ├── opt
+    │   ├── cloudy
+    │   └── aklump
+    │       └── install
+    └── {public web root}
 
     
 ### To Update
 
-- Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the `.`
-
-        (cd opt && git clone https://github.com/aklump/website-install.git .updating__install && rsync -a --delete --exclude=.git* .updating__install/ install/; rm -rf .updating__install)
+- Update to the latest version from your repo root: `cloudy pm-update aklump/install`
 
 ## Configuration Files
 

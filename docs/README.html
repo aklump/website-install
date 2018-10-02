@@ -16,6 +16,11 @@
 </div>
 </header>
 
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
 
   <h1>Website Install</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
@@ -33,11 +38,8 @@
 <h2>Quick Start</h2>
 
 <ul>
-<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the <code>.</code></p>
-
-<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d install || (git clone https://github.com/aklump/website-install.git install &amp;&amp; rm -rf install/.git)) &amp;&amp; (test -s $d/bin/install || ln -s $d/opt/install/install.sh $d/bin/install)) &amp;&amp; ./bin/install install
-</code></pre></li>
-<li><p>Open <em>bin/&#95;install.yml</em> and modify as needed.</p></li>
+<li>Install in your repository root using <code>cloudy pm-install aklump/install</code></li>
+<li>Open <em>bin/&#95;install.yml</em> and modify as needed.</li>
 <li>Open <em>bin/&#95;install.local.yml</em> and ...</li>
 </ul>
 
@@ -47,25 +49,25 @@
 
 <h2>Installation</h2>
 
-<p>The installation script above will generate the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
+<p>The installation script above will generate the following structure where <code>.</code> is your repository root.</p>
 
 <pre><code>.
 ├── bin
 │   ├── install -&gt; ../opt/install/install.sh
-│   ├── _install.yml
-│   └── _install.local.yml
-└── opt
-    ├── cloudy
-    └── install
+│   └── config
+│       ├── install.yml
+│       └── install.local.yml
+├── opt
+│   ├── cloudy
+│   └── aklump
+│       └── install
+└── {public web root}
 </code></pre>
 
 <h3>To Update</h3>
 
 <ul>
-<li><p>Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
-
-<pre><code>(cd opt &amp;&amp; git clone https://github.com/aklump/website-install.git .updating__install &amp;&amp; rsync -a --delete --exclude=.git* .updating__install/ install/; rm -rf .updating__install)
-</code></pre></li>
+<li>Update to the latest version from your repo root: <code>cloudy pm-update aklump/install</code></li>
 </ul>
 
 <h2>Configuration Files</h2>
@@ -122,11 +124,19 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 15:59:27 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 13:51:18 -0700</p>
   </div>
 </footer>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
 <script src="js/core.js"></script>
 </body>
 </html>
