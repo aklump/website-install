@@ -6,7 +6,7 @@
 
 A script to help with installing dependencies and deploying non-versioned files for a website.
 
-**Visit <https://aklump.github.io/install> for full documentation.**
+**Visit <https://aklump.github.io/website-install> for full documentation.**
 
 ## Quick Start
 
