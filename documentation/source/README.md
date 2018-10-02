@@ -11,8 +11,8 @@ A script to help with installing dependencies and deploying non-versioned files 
 ## Quick Start
 
 - Install in your repository root using `cloudy pm-install aklump/install`
-- Open _bin/\_install.yml_ and modify as needed.
-- Open _bin/\_install.local.yml_ and ...
+- Open _bin/config/install.yml_ and modify as needed.
+- Open _bin/config/install.local.yml_ and ...
 
 ## Requirements
 
@@ -43,8 +43,8 @@ The installation script above will generate the following structure where `.` is
 
 | Filename | Description | VCS |
 |----------|----------|---|
-| _\_install.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
-| _\_install.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
+| _install.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
+| _install.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
 
 ### Custom Configuration
 
