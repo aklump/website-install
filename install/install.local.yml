@@ -1,0 +1,3 @@
+use_sudo: false
+drush: /Users/aklump/.composer/vendor/bin/drush
+composer: /Users/aklump/bin/composer

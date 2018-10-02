@@ -1,0 +1,31 @@
+title: ""
+additional_config:
+- ../../bin/config/install.yml
+- ../../bin/config/install.local.yml
+default_command: help
+commands:
+  help:
+    help: Show this help screen.
+  clear-cache:
+    aliases: [clearcache, cc]
+    help: Clear all cached data.
+  prod:
+    help: Install in a production environment.
+  staging:
+    help: Install in a staging environment.
+  dev:
+    help: Install in a dev environment.
+  install:
+    help: 'Install local configuration files.'
+translate:
+  ids:
+  - Completed successfully.
+  - Failed.
+  strings:
+    en:
+    - Installation succeeded.
+    - Installation failed.
+name: 'Website Install'
+version: "1.0"
+description: 'A script to help with installing dependencies and deploying non-versioned files for a website.'
+author: 'Aaron Klump <sourcecode@intheloftstudios.com>'
