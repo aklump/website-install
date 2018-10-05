@@ -125,9 +125,9 @@ echo "$LIL $(echo_green Done.)"
 
 ## Apply perms.
 if [[ "$use_sudo" == true ]]; then
-    sudo $ROOT/perms.sh apply
+    sudo $(path_relative_to_config_base "bin/perms") apply
 else
-    $ROOT/perms.sh apply
+    $(path_relative_to_config_base "bin/perms") apply
 fi
 
 # Developers should manage their local Composer installation.
@@ -143,7 +143,7 @@ cd "$project_root" && $composer -v install $composer_flag || fail_because "Compo
 
 # Update configuration management, except on dev, where it should be handled by the developer.
 
-if [[ "$drupal_config_import" == true ]; then
+if [[ "$drupal_config_import" == true ]]; then
     echo_heading "Importing Drupal configuration"
     $drush config-import -y || fail_because "Drush config-import failed"
 fi
