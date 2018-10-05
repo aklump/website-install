@@ -33,6 +33,8 @@
 
 <p>A script to help with installing dependencies and deploying non-versioned files for a website.</p>
 
+<p>A Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
+
 <p><strong>Visit <a href="https://aklump.github.io/website-install">https://aklump.github.io/website-install</a> for full documentation.</strong></p>
 
 <h2>Quick Start</h2>
@@ -96,12 +98,66 @@
 
 <h3>Custom Configuration</h3>
 
-<ul>
-<li>lorem</li>
-<li>ipsum</li>
-</ul>
+<p>The basic configuration in <em>install.yml</em> consists of two lists.  The master files and the destination paths.  Notice the use of the token <code>__ROLE</code>, which will be substituted for the role.</p>
+
+<pre><code>master_dir: install/default
+master_files:
+    - install.__ROLE.yml
+installed_files:
+    - bin/config/install.local.yml
+</code></pre>
+
+<p>Environment specific options can be set in <em>install.local.yml</em>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>option</th>
+  <th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>use_sudo</td>
+  <td>Set to <code>true</code> to execute permissions with <code>sudo</code>.</td>
+</tr>
+<tr>
+  <td>composer_self_update</td>
+  <td>Set to true to run <code>composer self-update</code>, should be false on production environments, generally.</td>
+</tr>
+<tr>
+  <td>drupal_config_import</td>
+  <td>Set to true to automatically run <code>drush config import</code></td>
+</tr>
+</tbody>
+</table>
 
 <h2>Usage</h2>
+
+<p>In the example above we would expect to find the following in source control:</p>
+
+<pre><code>.
+├── bin
+│   └── config
+└── install
+    └── default
+        ├── install.dev.yml
+        ├── install.prod.yml
+        └── install.staging.yml
+</code></pre>
+
+<p>When we ran this script with <code>prod</code> then we would have the following, where <em>bin/config/install.local.yml</em> is a copy of <em>install/default/install.prod.yml</em>.</p>
+
+<pre><code>.
+├── bin
+│   └── config
+│       └── install.local.yml
+└── install
+    └── default
+        ├── install.dev.yml
+        ├── install.prod.yml
+        └── install.staging.yml
+</code></pre>
 
 <ul>
 <li>To see all commands use <code>./bin/install help</code></li>
@@ -124,7 +180,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 13:59:01 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Fri, 05 Oct 2018 11:05:45 -0700</p>
   </div>
 </footer>
 
