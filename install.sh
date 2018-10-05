@@ -64,22 +64,51 @@ validate_input || exit_with_failure "Input validation failed."
 
 implement_cloudy_basic
 
+
 #
-# Process the installation
+# Load configuration.
 #
-eval $(get_config "drush")
+eval $(get_config "drush" $(get_installed "drush"))
 exit_with_failure_if_empty_config "drush"
-eval $(get_config "composer")
+is_installed $drush || fail_because "Drush is not installed at \"$drush\"."
+
+eval $(get_config "composer" $(get_installed "composer"))
 exit_with_failure_if_empty_config "composer"
+is_installed $composer || fail_because "Composer is not installed at \"$composer\"."
+
+has_failed && exit_with_failure
 
 eval $(get_config_path "master_dir")
 exit_with_failure_if_config_is_not_path "master_dir"
 eval $(get_config -a "master_files")
 eval $(get_config_path -a "installed_files")
 
+eval $(get_config "composer_self_update" false)
+eval $(get_config "drupal_config_import" false)
+eval $(get_config "use_sudo" false)
+
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
 
-ROLE=$(get_command)  || exit_with_failure "Call with: prod, dev, or staging."
+command=$(get_command)
+case $command in
+info)
+    echo_heading "Settings Info"
+    table_clear
+    table_set_header "setting" "value"
+    table_add_row "Composer self-update" "$composer_self_update"
+    table_add_row "Drush config import" "$drupal_config_import"
+    table_add_row "Use sudo for permissions" "$use_sudo"
+    echo_slim_table
+    exit_with_success
+   ;;
+esac
+
+
+#
+# Process for an environment
+#
+
+ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
 echo_heading "Checking non-versioned files..."
@@ -95,14 +124,13 @@ done
 echo "$LIL $(echo_green Done.)"
 
 ## Apply perms.
-if [[ "$(get_config "use_sudo" false)" == true ]]; then
+if [[ "$use_sudo" == true ]]; then
     sudo $ROOT/perms.sh apply
 else
     $ROOT/perms.sh apply
 fi
 
 # Developers should manage their local Composer installation.
-eval $(get_config "composer_self_update" false)
 if [[ "$composer_self_update" == true ]]; then
     echo_heading "Running Composer self update."
     $composer self-update || fail_because "Composer self-update failed."
@@ -114,7 +142,7 @@ echo_heading "Installing dependencies with Composer..."
 cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 
 # Update configuration management, except on dev, where it should be handled by the developer.
-eval $(get_config "drupal_config_import" false)
+
 if [[ "$drupal_config_import" == true ]; then
     echo_heading "Importing Drupal configuration"
     $drush config-import -y || fail_because "Drush config-import failed"

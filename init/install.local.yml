@@ -1,5 +1,3 @@
-drush: /Users/aklump/.composer/vendor/bin/drush
-composer: /Users/aklump/bin/composer
 use_sudo: false
 composer_self_update: false
 drupal_config_import: false
