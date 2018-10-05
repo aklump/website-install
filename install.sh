@@ -62,7 +62,7 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # Input validation.
 validate_input || exit_with_failure "Input validation failed."
 
-#implement_cloudy_basic
+implement_cloudy_basic
 
 #
 # Process the installation
