@@ -1,0 +1,3 @@
+* ../../../bin/config/*
+gitignore ../../../opt/.gitignore
+cloudypm.files_map.txt

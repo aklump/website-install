@@ -6,6 +6,8 @@
 
 A script to help with installing dependencies and deploying non-versioned files for a website.
 
+A Drupal website has files that do not end up in version control: _.htaccess, settings.local.php_, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.
+
 **Visit <https://aklump.github.io/website-install> for full documentation.**
 
 ## Quick Start
@@ -48,10 +50,47 @@ The installation script above will generate the following structure where `.` is
 
 ### Custom Configuration
 
-* lorem
-* ipsum
+The basic configuration in _install.yml_ consists of two lists.  The master files and the destination paths.  Notice the use of the token `__ROLE`, which will be substituted for the role.
+
+    master_dir: install/default
+    master_files:
+        - install.__ROLE.yml
+    installed_files:
+        - bin/config/install.local.yml
+
+Environment specific options can be set in _install.local.yml_:
+
+| option | description |
+|----------|----------|
+| use_sudo | Set to `true` to execute permissions with `sudo`. |
+| composer_self_update | Set to true to run `composer self-update`, should be false on production environments, generally. |
+| drupal_config_import | Set to true to automatically run `drush config import` |
 
 ## Usage
+
+In the example above we would expect to find the following in source control:
+
+    .
+    ├── bin
+    │   └── config
+    └── install
+        └── default
+            ├── install.dev.yml
+            ├── install.prod.yml
+            └── install.staging.yml
+
+When we ran this script with `prod` then we would have the following, where _bin/config/install.local.yml_ is a copy of _install/default/install.prod.yml_.
+
+    .
+    ├── bin
+    │   └── config
+    │       └── install.local.yml
+    └── install
+        └── default
+            ├── install.dev.yml
+            ├── install.prod.yml
+            └── install.staging.yml
+
 
 * To see all commands use `./bin/install help`
 

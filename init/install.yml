@@ -1,0 +1,15 @@
+master_dir: install/default
+master_files:
+    - .htaccess.__ROLE
+    - config.__ROLE.php
+    - install.__ROLE.yml
+    - perms.__ROLE.yml
+    - settings.env.__ROLE.php
+    - settings.local.__ROLE.php
+installed_files:
+    - web/.htaccess
+    - bin/config/config.local.php
+    - bin/config/install.local.yml
+    - bin/config/perms.local.yml
+    - web/sites/default/settings.env.php
+    - web/sites/default/settings.local.php

@@ -14,11 +14,7 @@ CONFIG="install.core.yml";
 # TODO: Event handlers and other functions go here or source another file.
 
 function on_pre_config() {
-    if [[ "$(get_command)" == "init" ]]; then
-        CLOUDY_FAILED="Initialization failed."
-        CLOUDY_SUCCESS="Initialization complete."
-        exit_with_install
-    fi
+    [[ "$(get_command)" == "init" ]] && exit_with_init
 }
 
 ##
@@ -59,8 +55,6 @@ function install_file() {
     fi
 }
 
-# TODO: Event handlers and other functions go here or source another file.
-
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 # End Cloudy Bootstrap
@@ -68,7 +62,7 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # Input validation.
 validate_input || exit_with_failure "Input validation failed."
 
-implement_cloudy_basic
+#implement_cloudy_basic
 
 #
 # Process the installation
@@ -78,51 +72,55 @@ exit_with_failure_if_empty_config "drush"
 eval $(get_config "composer")
 exit_with_failure_if_empty_config "composer"
 
-project_root="$(cd -P "$ROOT/.." && pwd)"
-web_root="$(cd -P "$ROOT/../web" && pwd)"
-install_assets="$(cd -P "$ROOT/../install/default" && pwd)"
-drupal_env_role=$(get_command)  || exit_with_failure "Call with: prod, dev, or staging."
+eval $(get_config_path "master_dir")
+exit_with_failure_if_config_is_not_path "master_dir"
+eval $(get_config -a "master_files")
+eval $(get_config_path -a "installed_files")
+
+[ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
+
+ROLE=$(get_command)  || exit_with_failure "Call with: prod, dev, or staging."
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
-echo_headline "Checking non-versioned files..."
-
-# FINAL, SOURCE, FALLBACK SOURCE
-install_file "$ROOT/install.local.yml" "$install_assets/_install.$drupal_env_role.yml" "$install_assets/_install.dev.yml" || exit_with_failure
-install_file "$ROOT/_config.local.php" "$install_assets/_config.$drupal_env_role.php" "$install_assets/_config.dev.php" || exit_with_failure
-install_file "$ROOT/_perms.local.yml" "$install_assets/_perms.$drupal_env_role.yml" "$install_assets/_perms.dev.yml" || exit_with_failure
-install_file "$web_root/.htaccess" "$install_assets/.htaccess.$drupal_env_role" "$install_assets/.htaccess.dev" || exit_with_failure
-install_file "$web_root/sites/default/settings.env.php" "$install_assets/settings.env.$drupal_env_role.php" "$install_assets/settings.env.dev.php" || exit_with_failure
-install_file "$web_root/sites/default/settings.local.php" "$install_assets/settings.local.$drupal_env_role.php" "$install_assets/settings.local.dev.php" || exit_with_failure
+echo_heading "Checking non-versioned files..."
+index=0
+for master_file in "${master_files[@]}"; do
+    master_file=${master_dir}/${master_file/__ROLE/$ROLE}
+    master_fallback=${master_dir}/${master_fallback/__ROLE/dev}
+    installed_file=${installed_files[$i]}
+    installed_file=${installed_file/__ROLE/$ROLE}
+    install_file "$installed_file" "$master_file" "$master_fallback" || exit_with_failure
+    let index++
+done
 echo "$LIL $(echo_green Done.)"
 
 ## Apply perms.
-if [[ "$(get_config use_sudo)" == true ]]; then
+if [[ "$(get_config "use_sudo" false)" == true ]]; then
     sudo $ROOT/perms.sh apply
 else
     $ROOT/perms.sh apply
 fi
 
-# Update to the latest composer version.
-if [ "$drupal_env_role" == "prod" ]; then
-    composer_flag="--no-dev"
-fi
-
 # Developers should manage their local Composer installation.
-if [ "$drupal_env_role" != 'dev' ]; then
+eval $(get_config "composer_self_update" false)
+if [[ "$composer_self_update" == true ]]; then
+    echo_heading "Running Composer self update."
     $composer self-update || fail_because "Composer self-update failed."
 fi
 
 # Install composer dependencies.
-echo_headline "Installing dependencies with Composer..."
+echo_heading "Installing dependencies with Composer..."
+[ "$ROLE" == "prod" ] && composer_flag="--no-dev"
 cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 
 # Update configuration management, except on dev, where it should be handled by the developer.
-if [ "$drupal_env_role" != 'dev' ]; then
-    echo_headline "Importing Drupal configuration"
+eval $(get_config "drupal_config_import" false)
+if [[ "$drupal_config_import" == true ]; then
+    echo_heading "Importing Drupal configuration"
     $drush config-import -y || fail_because "Drush config-import failed"
 fi
 
-echo_headline "Rebuilding Drupal cache..."
+echo_heading "Rebuilding Drupal cache..."
 $drush rebuild || fail_because "Could not rebuild Drupal cache."
 
 has_failed && exit_with_failure
