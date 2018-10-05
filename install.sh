@@ -99,7 +99,7 @@ info)
     table_add_row "Drush config import" "$drupal_config_import"
     table_add_row "Use sudo for permissions" "$use_sudo"
     echo_slim_table
-    exit_with_success
+    exit_with_success "Configuration okay."
    ;;
 esac
 
