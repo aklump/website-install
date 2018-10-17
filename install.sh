@@ -51,8 +51,22 @@ function install_file() {
         fi
         echo "$LIL2 $(echo_green "Copied from") $source" && return 0
     else
-        echo "$LIL2 Found." && return 0
+        echo "$LIL2 Already present." && return 0
     fi
+}
+
+# Echo the major version of drupal.
+#
+# Returns 0 or 1 if indeterminate.
+function get_drupal_version() {
+    local output=$(cd $path_to_web_root && drush status --fields=drupal-version --field-labels=0)
+    [[ "$output" ]] && [[ "$output" =~ ([0-9]+)\. ]] || return 1
+
+    echo ${BASH_REMATCH[1]}
+}
+
+function is_using_composer() {
+    [ -f $ROOT/composer.json ]
 }
 
 # Begin Cloudy Bootstrap
@@ -64,6 +78,15 @@ validate_input || exit_with_failure "Input validation failed."
 
 implement_cloudy_basic
 
+# Import configuration as variables.
+eval $(get_config_path -a "path_to")
+eval $(get_config_keys_as "path_to_keys" "path_to")
+
+# Validate all path_to keys as actual paths.
+for key in "${path_to_keys[@]}"; do
+    exit_with_failure_if_config_is_not_path "path_to.$key"
+done
+exit_with_failure_if_empty_config "path_to.web_root"
 
 #
 # Load configuration.
@@ -95,20 +118,24 @@ info)
     echo_heading "Settings Info"
     table_clear
     table_set_header "setting" "value"
-    table_add_row "Composer self-update" "$composer_self_update"
-    table_add_row "Drush config import" "$drupal_config_import"
+    table_add_row "Drupal major version" "$(get_drupal_version)"
+    table_add_row "Using Composer" "$(if is_using_composer; then echo true; else echo false; fi)"
+    if [ "$drupal_major_version" -eq 8 ]; then
+        table_add_row "Composer self-update" "$composer_self_update"
+        table_add_row "Drush config import" "$drupal_config_import"
+    fi
     table_add_row "Use sudo for permissions" "$use_sudo"
     echo_slim_table
     exit_with_success "Configuration okay."
    ;;
 esac
 
-
 #
 # Process for an environment
 #
 
 ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
+drupal_major_version=$(get_drupal_version)
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
 echo_heading "Checking non-versioned files..."
@@ -130,26 +157,29 @@ else
     $(path_relative_to_config_base "bin/perms") apply
 fi
 
-# Developers should manage their local Composer installation.
-if [[ "$composer_self_update" == true ]]; then
-    echo_heading "Running Composer self update."
-    $composer self-update || fail_because "Composer self-update failed."
+if is_using_composer; then
+    # Developers should manage their local Composer installation.
+    if [[ "$composer_self_update" == true ]]; then
+        echo_heading "Running Composer self update."
+        $composer self-update || fail_because "Composer self-update failed."
+    fi
+
+    # Install composer dependencies.
+    echo_heading "Installing dependencies with Composer..."
+    [ "$ROLE" == "prod" ] && composer_flag="--no-dev"
+    cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 fi
 
-# Install composer dependencies.
-echo_heading "Installing dependencies with Composer..."
-[ "$ROLE" == "prod" ] && composer_flag="--no-dev"
-cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
-
 # Update configuration management, except on dev, where it should be handled by the developer.
-
-if [[ "$drupal_config_import" == true ]]; then
+if [ "$drupal_major_version" -eq 8 ] && [[ "$drupal_config_import" == true ]]; then
     echo_heading "Importing Drupal configuration"
     $drush config-import -y || fail_because "Drush config-import failed"
 fi
 
 echo_heading "Rebuilding Drupal cache..."
-$drush rebuild || fail_because "Could not rebuild Drupal cache."
+clear_command="cache-clear all"
+[ "$drupal_major_version" -eq 8 ] && clear_command="rebuild"
+(cd $path_to_web_root && $drush $clear_command) || fail_because "Could not rebuild Drupal cache."
 
 has_failed && exit_with_failure
 exit_with_success_elapsed

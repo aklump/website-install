@@ -1,13 +1,15 @@
+path_to:
+  web_root: web
 master_dir: install/default
 master_files:
-    - .htaccess.__ROLE
-    - install.__ROLE.yml
-    - perms.__ROLE.yml
-    - settings.env.__ROLE.php
-    - settings.local.__ROLE.php
+  - .htaccess.__ROLE
+  - install.__ROLE.yml
+  - perms.__ROLE.yml
+  - settings.env.__ROLE.php
+  - settings.local.__ROLE.php
 installed_files:
-    - web/.htaccess
-    - bin/config/install.local.yml
-    - bin/config/perms.local.yml
-    - web/sites/default/settings.env.php
-    - web/sites/default/settings.local.php
+  - web/.htaccess
+  - bin/config/install.local.yml
+  - bin/config/perms.local.yml
+  - web/sites/default/settings.env.php
+  - web/sites/default/settings.local.php
