@@ -14,6 +14,7 @@ A Drupal website has files that do not end up in version control: _.htaccess, se
 
 - Install in your repository root using `cloudy pm-install aklump/install`
 - Open _bin/config/install.yml_ and modify as needed.
+- Make sure to SCM ignore _config/*.local.yml_ files.
 - Open _bin/config/install.local.yml_ and ...
 
 ## Requirements
