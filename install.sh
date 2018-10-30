@@ -142,7 +142,7 @@ echo_heading "Checking non-versioned files..."
 index=0
 for master_file in "${master_files[@]}"; do
     master_file=${master_dir}/${master_file/__ROLE/$ROLE}
-    master_fallback=${master_dir}/${master_fallback/__ROLE/dev}
+    master_fallback=${master_dir}/${master_file/__ROLE/dev}
     installed_file=${installed_files[$index]}
     installed_file=${installed_file/__ROLE/$ROLE}
     install_file "$installed_file" "$master_file" "$master_fallback" || exit_with_failure
