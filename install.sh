@@ -166,19 +166,19 @@ if is_using_composer; then
 
     # Install composer dependencies.
     echo_heading "Installing dependencies with Composer..."
-    [ "$ROLE" == "prod" ] && composer_flag="--no-dev"
+    [[ "$ROLE" == "prod" ]] && composer_flag="--no-dev"
     cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 fi
 
 # Update configuration management, except on dev, where it should be handled by the developer.
-if [ "$drupal_major_version" -eq 8 ] && [[ "$drupal_config_import" == true ]]; then
+if [[ "$drupal_major_version" -eq 8 ]] && [[ "$drupal_config_import" == true ]]; then
     echo_heading "Importing Drupal configuration"
     $drush config-import -y || fail_because "Drush config-import failed"
 fi
 
 echo_heading "Rebuilding Drupal cache..."
 clear_command="cache-clear all"
-[ "$drupal_major_version" -eq 8 ] && clear_command="rebuild"
+[[ "$drupal_major_version" -eq 8 ]] && clear_command="rebuild"
 (cd $path_to_web_root && $drush $clear_command) || fail_because "Could not rebuild Drupal cache."
 
 has_failed && exit_with_failure
