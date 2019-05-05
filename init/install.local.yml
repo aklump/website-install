@@ -1,3 +1,8 @@
+# When applying permissions should `sudo` be used in the shell command?
 use_sudo: false
+
+# Should the script run `composer self-update`?
 composer_self_update: false
+
+# Should the script run `drush config-import -y`?
 drupal_config_import: false

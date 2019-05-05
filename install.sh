@@ -59,14 +59,17 @@ function install_file() {
 #
 # Returns 0 or 1 if indeterminate.
 function get_drupal_version() {
-    local output=$(cd $path_to_web_root && drush status --fields=drupal-version --field-labels=0)
+    local output=$(cd $path_to_web_root && drush status | grep "Drupal version" | awk -F ':' '{print $2}' | sed 's/^ *//')
     [[ "$output" ]] && [[ "$output" =~ ([0-9]+)\. ]] || return 1
 
     echo ${BASH_REMATCH[1]}
 }
 
+# Detect if this project uses composer to manage dependencies.
+#
+# Returns 0 if .
 function is_using_composer() {
-    [ -f $ROOT/composer.json ]
+    [[ "$path_to_composer" ]] && [ -f $path_to_composer/composer.json ]
 }
 
 # Begin Cloudy Bootstrap
@@ -112,6 +115,8 @@ eval $(get_config "use_sudo" false)
 
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
 
+drupal_major_version=$(get_drupal_version)
+
 command=$(get_command)
 case $command in
 info)
@@ -135,7 +140,6 @@ esac
 #
 
 ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
-drupal_major_version=$(get_drupal_version)
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
 echo_heading "Checking non-versioned files..."
@@ -166,7 +170,7 @@ if is_using_composer; then
 
     # Install composer dependencies.
     echo_heading "Installing dependencies with Composer..."
-    [[ "$ROLE" == "prod" ]] && composer_flag="--no-dev"
+    [[ "$ROLE" == "dev" ]] || composer_flag="--no-dev"
     cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 fi
 

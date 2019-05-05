@@ -1,12 +1,29 @@
 path_to:
+
+  # The directory that contains the composer.json file to manage all
+  # dependencies.  Comment this out if you are not using Composer or wish to
+  # manage your composer dependencies manually.
+  composer: .
+
+  # The web root directory.
   web_root: web
+
+# The directory where the master files will be located.
 master_dir: install/default
+
+# A list of master basenames which reside in master_dir.  These will be copied
+# to the corresponding array key of installed files, after first replacing
+# __ROLE with the role being processed.  That is to say that there will be no
+# actual file called _.htaccess.__ROLE_ but rather three files: _.htaccess.dev_,
+# _.htaccess.staging_,  _.htaccess.prod_ located in the master_dir.
 master_files:
   - .htaccess.__ROLE
   - install.__ROLE.yml
   - perms.__ROLE.yml
   - settings.env.__ROLE.php
   - settings.local.__ROLE.php
+
+# The locations where the master files will be copied to.
 installed_files:
   - web/.htaccess
   - bin/config/install.local.yml
