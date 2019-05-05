@@ -9,21 +9,19 @@
 
 <body class="page--readme">
 <header>
-  <div class="pager">
-  <a href="index.html" class="prev index">&laquo;Index</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
-</div>
-</header>
-
-  <div class="search__wrapper">
+  <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div></header>
+<section class="sub-header">
+  <div class="breadcrumbs"><a href="index.html">Index</a>
+         &raquo
+      </div>      <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
+  </section>
 
-  <h1>Website Install</h1>
-  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<h1>Website Install</h1>
 
 <section>
 
@@ -35,13 +33,15 @@
 
 <p>A Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
 
+<p>If you are using Composer to manage dependencies, this script will run <code>composer install</code> or <code>composer install --no-dev</code> as appropriate for the environment.</p>
+
 <p><strong>Visit <a href="https://aklump.github.io/website-install">https://aklump.github.io/website-install</a> for full documentation.</strong></p>
 
 <h2>Quick Start</h2>
 
 <ul>
 <li>Install in your repository root using <code>cloudy pm-install aklump/install</code></li>
-<li>Open <em>bin/config/install.yml</em> and modify as needed.</li>
+<li>Open <em>bin/config/install.yml</em> and make your configuration.</li>
 <li>Make sure to SCM ignore <em>config/*.local.yml</em> files.</li>
 <li>Open <em>bin/config/install.local.yml</em> and ...</li>
 </ul>
@@ -188,14 +188,9 @@ composer: /Users/aklump/bin/composer
 </div>
 
 <footer>
-  <div class="pager">
-  <a href="index.html" class="prev index">&laquo;Index</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
-</div>
-  
+  <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.9 &bull; Last Updated: Sat, 04 May 2019 10:21:09 -0700</p>
+    <p class="legaleeze center">Version: 1.0.9 &bull; Last Updated: Sat, 04 May 2019 19:06:23 -0700</p>
   </div>
 </footer>
 
@@ -204,9 +199,9 @@ composer: /Users/aklump/bin/composer
   <script src="search/tipuesearch_set.js"></script>
   <script src="search/tipuesearch.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $('#tipue_search_input').tipuesearch();
-    });
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
   </script>
 <script src="js/core.js"></script>
 </body>

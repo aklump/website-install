@@ -8,12 +8,14 @@ A script to help with installing dependencies and deploying non-versioned files 
 
 A Drupal website has files that do not end up in version control: _.htaccess, settings.local.php_, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.
 
+If you are using Composer to manage dependencies, this script will run `composer install` or `composer install --no-dev` as appropriate for the environment.
+
 **Visit <https://aklump.github.io/website-install> for full documentation.**
 
 ## Quick Start
 
 - Install in your repository root using `cloudy pm-install aklump/install`
-- Open _bin/config/install.yml_ and modify as needed.
+- Open _bin/config/install.yml_ and make your configuration.
 - Make sure to SCM ignore _config/*.local.yml_ files.
 - Open _bin/config/install.local.yml_ and ...
 
