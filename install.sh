@@ -95,12 +95,10 @@ exit_with_failure_if_empty_config "path_to.web_root"
 # Load configuration.
 #
 eval $(get_config "drush" $(get_installed "drush"))
-exit_with_failure_if_empty_config "drush"
-is_installed $drush || fail_because "Drush is not installed at \"$drush\"."
+[[ ! "$drush" ]] || is_installed $drush || fail_because "Drush is not installed at \"$drush\"."
 
 eval $(get_config "composer" $(get_installed "composer"))
-exit_with_failure_if_empty_config "composer"
-is_installed $composer || fail_because "Composer is not installed at \"$composer\"."
+[[ ! "$composer" ]] || is_installed $composer || fail_because "Composer is not installed at \"$composer\"."
 
 has_failed && exit_with_failure
 
@@ -109,8 +107,14 @@ exit_with_failure_if_config_is_not_path "master_dir"
 eval $(get_config -a "master_files")
 eval $(get_config_path -a "installed_files")
 
+# Check for Composer integration and fail if composer is not found.
 eval $(get_config "composer_self_update" false)
+[[ "$composer_self_update"  == true ]] && exit_with_failure_if_empty_config "composer"
+
+# Check for drush integration and fail if drush not found.
 eval $(get_config "drupal_config_import" false)
+[[ "$drupal_config_import"  == true ]] && exit_with_failure_if_empty_config "drush"
+
 eval $(get_config "use_sudo" false)
 
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
