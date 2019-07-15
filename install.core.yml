@@ -1,8 +1,8 @@
 title: ''
 config_path_base: ../../..
 additional_config:
-  - ../../../bin/config/install.yml
-  - ../../../bin/config/install.local.yml
+  - bin/config/install.yml
+  - bin/config/install.local.yml
 default_command: info
 commands:
   help:
