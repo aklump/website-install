@@ -35,6 +35,7 @@ function install_file() {
     echo "$LI $installed_file"
 
     if ! test -f $installed_file; then
+        mkdir -p "$(dirname "$installed_file")"
         write_log_notice "Installing missing file: $installed_file."
         if test -f "$preferred_source"; then
             write_log_info "Using preferred source: $preferred_source"
