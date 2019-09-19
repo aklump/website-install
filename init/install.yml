@@ -45,5 +45,7 @@ installed_files:
 #    - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .
 #  post_install:
 #    - install/scripts/after.sh
-#  post_install_prod:
-#    - "cd web && drush cc all"
+  post_install_prod:
+    - git pull
+    - ./bin/perms apply
+    - "cd web && drush cc all"

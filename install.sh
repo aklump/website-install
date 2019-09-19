@@ -137,8 +137,6 @@ eval $(get_config "composer_self_update" false)
 eval $(get_config "drupal_config_import" false)
 [[ "$drupal_config_import" == true ]] && exit_with_failure_if_empty_config "drush"
 
-eval $(get_config "use_sudo" false)
-
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
 
 drupal_major_version=$(get_drupal_version)
@@ -155,7 +153,6 @@ info)
     table_add_row "Composer self-update" "$composer_self_update"
     table_add_row "Drush config import" "$drupal_config_import"
   fi
-  table_add_row "Use sudo for permissions" "$use_sudo"
   echo_slim_table
   exit_with_success "Configuration okay."
   ;;
@@ -182,15 +179,6 @@ for file in "${master_files[@]}"; do
   let index++
 done
 echo "$LIL $(echo_green Done.)"
-
-## Apply perms.
-if [[ -e "bin/perms" ]]; then
-  if [[ "$use_sudo" == true ]]; then
-    sudo $(path_relative_to_config_base "bin/perms") apply
-  else
-    $(path_relative_to_config_base "bin/perms") apply
-  fi
-fi
 
 if is_using_composer; then
   # Developers should manage their local Composer installation.

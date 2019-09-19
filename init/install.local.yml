@@ -1,6 +1,3 @@
-# When applying permissions should `sudo` be used in the shell command?
-use_sudo: false
-
 # Should the script run `composer self-update`?
 composer_self_update: false
 
