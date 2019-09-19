@@ -95,7 +95,6 @@ eval $(get_config_keys_as "path_to_keys" "path_to")
 for key in "${path_to_keys[@]}"; do
   exit_with_failure_if_config_is_not_path "path_to.$key"
 done
-exit_with_failure_if_empty_config "path_to.web_root"
 
 #
 # Load configuration.
