@@ -4,20 +4,77 @@
 
 ## Summary
 
-A script to help with installing dependencies and deploying non-versioned files for a website.
+Provides a single command `install <role>` to make sure your website is ready to go.
 
-A Drupal website has files that do not end up in version control: _.htaccess, settings.local.php_, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.
+* Simplifies the management of non-versioned files (settings, composer dependencies, etc.) for the different website environments, dev, staging, prod.
+* Consists of two elements: scripts and files.
+* May be executed as often as you like, as it simple ensures that everything is updated and in place.
+* Encapsulates disparate commands under a single command.
 
-If you are using Composer to manage dependencies, this script will run `composer install` or `composer install --no-dev` as appropriate for the environment.
+### Scripts
+
+The configuration allows you to setup commands or scripts to run per environment so that when for example, you call `install dev`, the development scripts only will fire.  As a suggestion, only include scripts and commands that support the aim of this project, that is to put files and state in place so that your website is ready.  You can use these to do things like:
+    
+    drush cr
+    composer install
+    drush config-import
+    drush updb
+    ./bin/perms apply
+    git pull
+
+If you are using Composer to manage dependencies, you can add the appropriate `composer install` command to the `scripts` configuration and then calling `install <role>` will grab the dependencies as well.  You might do something like this so that production does not get dev dependencies.
+
+    scripts:
+      post_install:
+        - composer install --no-dev
+      post_install_dev:
+        - composer install        
+
+#### Configuration 
+
+In _install.yml_ are the script definitions.  You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having `$APP_ROOT` as the working directory.
+    
+        ...
+        scripts:
+          pre_install_dev:
+            - mkdir -p web/modules/dev
+            - rm web/modules/dev/se_dev || return 0
+            - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .    
+
+Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having `$APP_ROOT` as the working directory.
+                                                              
+
+        ...
+        scripts:
+          pre_install_dev:
+            - install/scripts/before.sh
+            - install/scripts/before.php
+            
+### Files
+
+The files element gives you the ability to define environment-specific files, which are then copied to the correct location when running `install <role>`.  For example, a Drupal website has files that do not end up in version control: _.htaccess, settings.local.php_, etc.  This project provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.
+
+If a file already exists in it's runtime location, nothing happens, but if it's missing then the file is copied from the appropriate environment source.
+
+#### Configuration
+
+The basic configuration in _install.yml_ consists of two lists.  The master files and the destination paths.  Notice the use of the token `__ROLE`, which will be substituted for the role.  You must have the same number of items in each list.
+
+    master_dir: install/default
+    master_files:
+        - install.__ROLE.yml
+    installed_files:
+        - bin/config/install.local.yml
 
 **Visit <https://aklump.github.io/website-install> for full documentation.**
 
 ## Quick Start
 
-- Install in your repository root using `cloudy pm-install aklump/install`
-- Open _bin/config/install.yml_ and make your configuration.
-- Make sure to SCM ignore _config/*.local.yml_ files.
-- Open _bin/config/install.local.yml_ and ...
+- Install in your repository root using `cloudy pm-install aklump/install`.
+- Create your `master_dir` to hold your source files, e.g. _install/default/_.
+- Place source files in this folder.
+- Open _bin/config/install.yml_ and map your files.
+- Define any scripts that you would like to associate with an environment.
 
 ## Requirements
 
@@ -51,36 +108,6 @@ The installation script above will generate the following structure where `.` is
 | _install.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
 | _install.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
 
-### Custom Configuration
-
-The basic configuration in _install.yml_ consists of two lists.  The master files and the destination paths.  Notice the use of the token `__ROLE`, which will be substituted for the role.
-
-    master_dir: install/default
-    master_files:
-        - install.__ROLE.yml
-    installed_files:
-        - bin/config/install.local.yml
-
-## Scripts
-
-You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having `$APP_ROOT` as the working directory.
-    
-        ...
-        scripts:
-          pre_install_dev:
-            - mkdir -p web/modules/dev
-            - rm web/modules/dev/se_dev || return 0
-            - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .    
-
-Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having `$APP_ROOT` as the working directory.
-                                                              
-
-        ...
-        scripts:
-          pre_install_dev:
-            - install/scripts/before.sh
-            - install/scripts/before.php
-            
 ## Usage
 
 In the example above we would expect to find the following in source control:

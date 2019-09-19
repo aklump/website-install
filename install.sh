@@ -123,11 +123,12 @@ event_dispatch "execute_scripts" "pre_install"
 event_dispatch "execute_scripts" "pre_install_$ROLE"
 has_option verbose && echo_list && echo
 
-# If the files are not found by environment then we use dev, which is created at the beginning of local development.
 echo_heading "Ensuring non-SCM files are in place"
 index=0
 list_clear
 for file in "${master_files[@]}"; do
+  # If the files are not found by environment then we use dev, which is created at
+  # the beginning of local development.
   master_fallback=${master_dir}/${file/__ROLE/dev}
   master_file=${master_dir}/${file/__ROLE/$ROLE}
   installed_file=${installed_files[$index]}
