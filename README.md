@@ -65,7 +65,6 @@ Environment specific options can be set in _install.local.yml_:
 
 | option | description |
 |----------|----------|
-| composer_self_update | Set to true to run `composer self-update`, should be false on production environments, generally. |
 | drupal_config_import | Set to true to automatically run `drush config import` |
 | drush | (optional) Path to the Drush command |
 | composer | (optional) Path to the composer command |

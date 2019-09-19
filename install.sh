@@ -130,10 +130,6 @@ exit_with_failure_if_config_is_not_path "master_dir"
 eval $(get_config -a "master_files")
 eval $(get_config_path -a "installed_files")
 
-# Check for Composer integration and fail if composer is not found.
-eval $(get_config "composer_self_update" false)
-[[ "$composer_self_update" == true ]] && exit_with_failure_if_empty_config "composer"
-
 # Check for drush integration and fail if drush not found.
 eval $(get_config "drupal_config_import" false)
 [[ "$drupal_config_import" == true ]] && exit_with_failure_if_empty_config "drush"
@@ -151,7 +147,6 @@ info)
   table_add_row "Drupal major version" "$(get_drupal_version)"
   table_add_row "Using Composer" "$(if is_using_composer; then echo true; else echo false; fi)"
   if [ "$drupal_major_version" -eq 8 ]; then
-    table_add_row "Composer self-update" "$composer_self_update"
     table_add_row "Drush config import" "$drupal_config_import"
   fi
   echo_slim_table
@@ -186,12 +181,6 @@ done
 has_option verbose && echo_list && echo
 
 if is_using_composer; then
-  # Developers should manage their local Composer installation.
-  if [[ "$composer_self_update" == true ]]; then
-    echo_heading "Running Composer self update."
-    $composer self-update || fail_because "Composer self-update failed."
-  fi
-
   # Install composer dependencies.
   echo_heading "Installing dependencies with Composer"
   [[ "$ROLE" == "dev" ]] || composer_flag="--no-dev"

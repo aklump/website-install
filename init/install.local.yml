@@ -1,5 +1,3 @@
-# Should the script run `composer self-update`?
-composer_self_update: false
 
 # Should the script run `drush config-import -y`?
 drupal_config_import: false
