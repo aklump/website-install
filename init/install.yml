@@ -30,3 +30,20 @@ installed_files:
   - bin/config/perms.local.yml
   - web/sites/default/settings.env.php
   - web/sites/default/settings.local.php
+
+# You can setup commands or scripts to be run.  Each key is an array of commands
+# or filenames of scripts to be executed.  Each line executes in a subshell and
+# must return 0 or the installation will fail. The following keys are available:
+# - pre_install
+# - pre_install_{ROLE}
+# - post_install
+# - post_install_{ROLE}
+#scripts:
+#  pre_install_dev:
+#    - mkdir -p web/modules/dev
+#    - rm web/modules/dev/se_dev || return 0
+#    - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .
+#  post_install:
+#    - install/scripts/after.sh
+#  post_install_prod:
+#    - "cd web && drush cc all"
