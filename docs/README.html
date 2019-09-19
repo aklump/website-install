@@ -29,21 +29,84 @@
 
 <h2>Summary</h2>
 
-<p>A script to help with installing dependencies and deploying non-versioned files for a website.</p>
+<p>Provides a single command <code>install &lt;role&gt;</code> to make sure your website is ready to go.</p>
 
-<p>A Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc.  This script provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
+<ul>
+<li>Simplifies the management of non-versioned files (settings, composer dependencies, etc.) for the different website environments, dev, staging, prod.</li>
+<li>Consists of two elements: scripts and files.</li>
+<li>May be executed as often as you like, as it simple ensures that everything is updated and in place.</li>
+<li>Encapsulates disparate commands under a single command.</li>
+</ul>
 
-<p>If you are using Composer to manage dependencies, this script will run <code>composer install</code> or <code>composer install --no-dev</code> as appropriate for the environment.</p>
+<h3>Scripts</h3>
+
+<p>The configuration allows you to setup commands or scripts to run per environment so that when for example, you call <code>install dev</code>, the development scripts only will fire.  As a suggestion, only include scripts and commands that support the aim of this project, that is to put files and state in place so that your website is ready.  You can use these to do things like:</p>
+
+<pre><code>drush cr
+composer install
+drush config-import
+drush updb
+./bin/perms apply
+git pull
+</code></pre>
+
+<p>If you are using Composer to manage dependencies, you can add the appropriate <code>composer install</code> command to the <code>scripts</code> configuration and then calling <code>install &lt;role&gt;</code> will grab the dependencies as well.  You might do something like this so that production does not get dev dependencies.</p>
+
+<pre><code>scripts:
+  post_install:
+    - composer install --no-dev
+  post_install_dev:
+    - composer install        
+</code></pre>
+
+<h4>Configuration</h4>
+
+<p>In <em>install.yml</em> are the script definitions.  You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
+
+<pre><code>    ...
+    scripts:
+      pre_install_dev:
+        - mkdir -p web/modules/dev
+        - rm web/modules/dev/se_dev || return 0
+        - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
+</code></pre>
+
+<p>Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
+
+<pre><code>    ...
+    scripts:
+      pre_install_dev:
+        - install/scripts/before.sh
+        - install/scripts/before.php
+</code></pre>
+
+<h3>Files</h3>
+
+<p>The files element gives you the ability to define environment-specific files, which are then copied to the correct location when running <code>install &lt;role&gt;</code>.  For example, a Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc.  This project provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
+
+<p>If a file already exists in it's runtime location, nothing happens, but if it's missing then the file is copied from the appropriate environment source.</p>
+
+<h4>Configuration</h4>
+
+<p>The basic configuration in <em>install.yml</em> consists of two lists.  The master files and the destination paths.  Notice the use of the token <code>__ROLE</code>, which will be substituted for the role.  You must have the same number of items in each list.</p>
+
+<pre><code>master_dir: install/default
+master_files:
+    - install.__ROLE.yml
+installed_files:
+    - bin/config/install.local.yml
+</code></pre>
 
 <p><strong>Visit <a href="https://aklump.github.io/website-install">https://aklump.github.io/website-install</a> for full documentation.</strong></p>
 
 <h2>Quick Start</h2>
 
 <ul>
-<li>Install in your repository root using <code>cloudy pm-install aklump/install</code></li>
-<li>Open <em>bin/config/install.yml</em> and make your configuration.</li>
-<li>Make sure to SCM ignore <em>config/*.local.yml</em> files.</li>
-<li>Open <em>bin/config/install.local.yml</em> and ...</li>
+<li>Install in your repository root using <code>cloudy pm-install aklump/install</code>.</li>
+<li>Create your <code>master_dir</code> to hold your source files, e.g. <em>install/default/</em>.</li>
+<li>Place source files in this folder.</li>
+<li>Open <em>bin/config/install.yml</em> and map your files.</li>
+<li>Define any scripts that you would like to associate with an environment.</li>
 </ul>
 
 <h2>Requirements</h2>
@@ -89,80 +152,8 @@
   <td>Configuration shared across all server environments: prod, staging, dev</td>
   <td>yes</td>
 </tr>
-<tr>
-  <td><em>install.local.yml</em></td>
-  <td>Configuration overrides for a single environment; not version controlled.</td>
-  <td>no</td>
-</tr>
 </tbody>
 </table>
-
-<h3>Custom Configuration</h3>
-
-<p>The basic configuration in <em>install.yml</em> consists of two lists.  The master files and the destination paths.  Notice the use of the token <code>__ROLE</code>, which will be substituted for the role.</p>
-
-<pre><code>master_dir: install/default
-master_files:
-    - install.__ROLE.yml
-installed_files:
-    - bin/config/install.local.yml
-</code></pre>
-
-<p>Environment specific options can be set in <em>install.local.yml</em>:</p>
-
-<table>
-<thead>
-<tr>
-  <th>option</th>
-  <th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>composer_self_update</td>
-  <td>Set to true to run <code>composer self-update</code>, should be false on production environments, generally.</td>
-</tr>
-<tr>
-  <td>drupal_config_import</td>
-  <td>Set to true to automatically run <code>drush config import</code></td>
-</tr>
-<tr>
-  <td>drush</td>
-  <td>(optional) Path to the Drush command</td>
-</tr>
-<tr>
-  <td>composer</td>
-  <td>(optional) Path to the composer command</td>
-</tr>
-</tbody>
-</table>
-
-<p>Optional configuration, e.g.,</p>
-
-<pre><code>drush: /Users/aklump/.composer/vendor/bin/drush
-composer: /Users/aklump/bin/composer
-</code></pre>
-
-<h2>Scripts</h2>
-
-<p>You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
-
-<pre><code>    ...
-    scripts:
-      pre_install_dev:
-        - mkdir -p web/modules/dev
-        - rm web/modules/dev/se_dev || return 0
-        - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
-</code></pre>
-
-<p>Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
-
-<pre><code>    ...
-    scripts:
-      pre_install_dev:
-        - install/scripts/before.sh
-        - install/scripts/before.php
-</code></pre>
 
 <h2>Usage</h2>
 
@@ -207,7 +198,7 @@ composer: /Users/aklump/bin/composer
 <footer>
   <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.4.1 &bull; Last Updated: Wed, 18 Sep 2019 20:52:36 -0700</p>
+    <p class="legaleeze center">Version: 1.5.0 &bull; Last Updated: Thu, 19 Sep 2019 11:01:39 -0700</p>
   </div>
 </footer>
 
