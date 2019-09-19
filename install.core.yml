@@ -15,11 +15,11 @@ commands:
     options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   staging:
     aliases: [test]
-    help: 'Install in a staging environment.  While you may call this with `test` your source files will need to be named using `staging`.'
+    help: 'Install in a staging environment.  While you may call this with \`test\` your source files will need to be named using \`staging\`.'
     options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   prod:
     aliases: [live]
-    help: 'Install in a production environment.  While you may call this with `test` your source files will need to be named using `prod`.'
+    help: 'Install in a production environment.  While you may call this with \`test\` your source files will need to be named using \`prod\`.'
     options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   init:
     help: 'Initialize this script''s configuration files.'
