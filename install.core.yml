@@ -3,21 +3,23 @@ config_path_base: ../../..
 additional_config:
   - bin/config/install.yml
   - bin/config/install.local.yml
-default_command: info
+default_command: help
 commands:
   help:
     help: 'Show this help screen.'
   clear-cache:
     aliases: [clearcache, cc]
     help: 'Clear all cached data.'
-  prod:
-    help: 'Install in a production environment.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
-  staging:
-    help: 'Install in a staging environment.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   dev:
     help: 'Install in a dev environment.'
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
+  staging:
+    aliases: [test]
+    help: 'Install in a staging environment.  While you may call this with `test` your source files will need to be named using `staging`.'
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
+  prod:
+    aliases: [live]
+    help: 'Install in a production environment.  While you may call this with `test` your source files will need to be named using `prod`.'
     options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   init:
     help: 'Initialize this script''s configuration files.'

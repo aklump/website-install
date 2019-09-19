@@ -116,6 +116,8 @@ command=$(get_command)
 
 ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
 
+echo_title "Installation environment: $ROLE"
+
 list_clear
 echo_heading "Handling early scripts"
 event_dispatch "execute_scripts" "pre_install"

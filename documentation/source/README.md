@@ -25,7 +25,9 @@ The configuration allows you to setup commands or scripts to run per environment
 If you are using Composer to manage dependencies, you can add the appropriate `composer install` command to the `scripts` configuration and then calling `install <role>` will grab the dependencies as well.  You might do something like this so that production does not get dev dependencies.
 
     scripts:
-      post_install:
+      post_install_staging:
+        - composer install --no-dev
+      post_install_prod:
         - composer install --no-dev
       post_install_dev:
         - composer install        
