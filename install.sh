@@ -22,11 +22,12 @@ function on_execute_scripts() {
   eval $(get_config_as -a items "scripts.$name")
   if [[ "${#items[@]}" -gt 0 ]]; then
     for item in "${items[@]}"; do
+      list_add_item "$item"
       if [[ -f $item ]]; then
-        (. "$item")
+        (cd "$APP_ROOT" && . "$item")
         status=$?
       else
-        (eval "$item")
+        (cd "$APP_ROOT" && eval "$item")
         status=$?
       fi
       if [ $status -ne 0 ]; then
@@ -53,7 +54,6 @@ function install_file() {
   local preferred_source="$2"
   local fallback_source="$3"
   local source
-  echo "$LI $installed_file"
 
   if ! test -f $installed_file; then
     mkdir -p "$(dirname "$installed_file")"
@@ -71,10 +71,11 @@ function install_file() {
       [ $? -ne 0 ] && fail_because "Could not copy $fallback_source to $installed_file" && return 1
       source="$fallback_source"
     fi
-    echo "$LIL2 $(echo_green "Copied from") $source" && return 0
+    list_add_item "$(path_unresolve "$APP_ROOT" "$installed_file") ... $(echo_green "[Copied from $(path_unresolve "$APP_ROOT" "$source")]")"
   else
-    echo "$LIL2 Already present." && return 0
+    list_add_item "$(path_unresolve "$APP_ROOT" "$installed_file") ... $(echo_green "[Already present]")"
   fi
+  return 0
 }
 
 # Echo the major version of drupal.
@@ -164,12 +165,16 @@ esac
 
 ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
 
+list_clear
 event_dispatch "execute_scripts" "pre_install"
 event_dispatch "execute_scripts" "pre_install_$ROLE"
+list_has_items && echo_heading "Handling early scripts"
+has_option verbose && echo_list && echo
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
-echo_heading "Checking non-versioned files..."
+echo_heading "Ensuring non-SCM files are in place"
 index=0
+list_clear
 for file in "${master_files[@]}"; do
   master_fallback=${master_dir}/${file/__ROLE/dev}
   master_file=${master_dir}/${file/__ROLE/$ROLE}
@@ -178,7 +183,7 @@ for file in "${master_files[@]}"; do
   install_file "$installed_file" "$master_file" "$master_fallback" || exit_with_failure
   let index++
 done
-echo "$LIL $(echo_green Done.)"
+has_option verbose && echo_list && echo
 
 if is_using_composer; then
   # Developers should manage their local Composer installation.
@@ -188,7 +193,7 @@ if is_using_composer; then
   fi
 
   # Install composer dependencies.
-  echo_heading "Installing dependencies with Composer..."
+  echo_heading "Installing dependencies with Composer"
   [[ "$ROLE" == "dev" ]] || composer_flag="--no-dev"
   cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
 fi
@@ -199,14 +204,17 @@ if [[ "$drupal_major_version" -eq 8 ]] && [[ "$drupal_config_import" == true ]];
   $drush config-import -y || fail_because "Drush config-import failed"
 fi
 
-echo_heading "Rebuilding Drupal cache..."
+echo_heading "Rebuilding Drupal cache"
 clear_command="cache-clear all"
 [[ "$drupal_major_version" -eq 8 ]] && clear_command="rebuild"
 (cd $path_to_web_root && $drush $clear_command) || fail_because "Could not rebuild Drupal cache."
 
 has_failed && exit_with_failure
 
+list_clear
 event_dispatch "execute_scripts" "post_install"
 event_dispatch "execute_scripts" "post_install_$ROLE"
+list_has_items && echo_heading "Handling late scripts"
+has_option verbose && echo_list && echo
 
 exit_with_success_elapsed

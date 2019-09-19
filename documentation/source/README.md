@@ -77,7 +77,7 @@ Optional configuration, e.g.,
 
 ## Scripts
 
-You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each must return 0.  Each runs in a subshell.
+You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having `$APP_ROOT` as the working directory.
     
         ...
         scripts:
@@ -86,7 +86,8 @@ You may run specific bash commands before or after installation, for all or a gi
             - rm web/modules/dev/se_dev || return 0
             - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .    
 
-Alternately, you could point to files to be run instead.
+Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having `$APP_ROOT` as the working directory.
+                                                              
 
         ...
         scripts:

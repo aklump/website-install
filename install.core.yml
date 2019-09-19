@@ -14,10 +14,25 @@ commands:
     help: 'Clear all cached data.'
   prod:
     help: 'Install in a production environment.'
+    options:
+      verbose:
+        type: boolean
+        help: 'Be more verbose with output.'
+        aliases: [v]
   staging:
     help: 'Install in a staging environment.'
+    options:
+      verbose:
+        type: boolean
+        help: 'Be more verbose with output.'
+        aliases: [v]
   dev:
     help: 'Install in a dev environment.'
+    options:
+      verbose:
+        type: boolean
+        help: 'Be more verbose with output.'
+        aliases: [v]
   init:
     help: 'Initialize this script''s configuration files.'
 translate:
