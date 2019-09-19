@@ -3,11 +3,17 @@
 ## [1.5.0] - 2019-09-19
 
 ### Removed
-
 - Automatic `composer self-update` (use `scripts` instead)
 - Automatic `composer update`
 - Automatic `drush config-import`
-  
+- Certain config options removed; you may delete from _install.local.yml_:
+    - `path_to.web_root`
+    - `path_to.composer`
+    - `drush`
+    - `composer`
+    - `composer_self_update`
+    - `drupal_config_import`
+    
 ## [1.4.0] - 2019-09-18
 
 ### Removed
