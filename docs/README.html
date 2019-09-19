@@ -53,7 +53,9 @@ git pull
 <p>If you are using Composer to manage dependencies, you can add the appropriate <code>composer install</code> command to the <code>scripts</code> configuration and then calling <code>install &lt;role&gt;</code> will grab the dependencies as well.  You might do something like this so that production does not get dev dependencies.</p>
 
 <pre><code>scripts:
-  post_install:
+  post_install_staging:
+    - composer install --no-dev
+  post_install_prod:
     - composer install --no-dev
   post_install_dev:
     - composer install        
@@ -198,7 +200,7 @@ installed_files:
 <footer>
   <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.5.0 &bull; Last Updated: Thu, 19 Sep 2019 11:01:39 -0700</p>
+    <p class="legaleeze center">Version: 1.5.1 &bull; Last Updated: Thu, 19 Sep 2019 11:25:33 -0700</p>
   </div>
 </footer>
 
