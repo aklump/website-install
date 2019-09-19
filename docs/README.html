@@ -145,7 +145,7 @@ composer: /Users/aklump/bin/composer
 
 <h2>Scripts</h2>
 
-<p>You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each must return 0.  Each runs in a subshell.</p>
+<p>You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
 
 <pre><code>    ...
     scripts:
@@ -155,7 +155,7 @@ composer: /Users/aklump/bin/composer
         - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
 </code></pre>
 
-<p>Alternately, you could point to files to be run instead.</p>
+<p>Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
 
 <pre><code>    ...
     scripts:
@@ -207,7 +207,7 @@ composer: /Users/aklump/bin/composer
 <footer>
   <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.0 &bull; Last Updated: Wed, 18 Sep 2019 18:32:23 -0700</p>
+    <p class="legaleeze center">Version: 1.3.1 &bull; Last Updated: Wed, 18 Sep 2019 20:41:05 -0700</p>
   </div>
 </footer>
 
