@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0] - 2019-09-19
+
+### Removed
+
+- Automatic `composer self-update` (use `scripts` instead)
+- Automatic `composer update`
+  
 ## [1.4.0] - 2019-09-18
 
 ### Removed

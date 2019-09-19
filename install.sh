@@ -88,13 +88,6 @@ function get_drupal_version() {
   echo ${BASH_REMATCH[1]}
 }
 
-# Detect if this project uses composer to manage dependencies.
-#
-# Returns 0 if .
-function is_using_composer() {
-  [[ "$path_to_composer" ]] && [ -f $path_to_composer/composer.json ]
-}
-
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 # End Cloudy Bootstrap
@@ -120,9 +113,6 @@ exit_with_failure_if_empty_config "path_to.web_root"
 eval $(get_config "drush" $(get_installed "drush"))
 [[ ! "$drush" ]] || is_installed $drush || fail_because "Drush is not installed at \"$drush\"."
 
-eval $(get_config "composer" $(get_installed "composer"))
-[[ ! "$composer" ]] || is_installed $composer || fail_because "Composer is not installed at \"$composer\"."
-
 has_failed && exit_with_failure
 
 eval $(get_config_path "master_dir")
@@ -145,7 +135,6 @@ info)
   table_clear
   table_set_header "setting" "value"
   table_add_row "Drupal major version" "$(get_drupal_version)"
-  table_add_row "Using Composer" "$(if is_using_composer; then echo true; else echo false; fi)"
   if [ "$drupal_major_version" -eq 8 ]; then
     table_add_row "Drush config import" "$drupal_config_import"
   fi
@@ -179,13 +168,6 @@ for file in "${master_files[@]}"; do
   let index++
 done
 has_option verbose && echo_list && echo
-
-if is_using_composer; then
-  # Install composer dependencies.
-  echo_heading "Installing dependencies with Composer"
-  [[ "$ROLE" == "dev" ]] || composer_flag="--no-dev"
-  cd "$project_root" && $composer -v install $composer_flag || fail_because "Composer install failed."
-fi
 
 # Update configuration management, except on dev, where it should be handled by the developer.
 if [[ "$drupal_major_version" -eq 8 ]] && [[ "$drupal_config_import" == true ]]; then

@@ -67,12 +67,10 @@ Environment specific options can be set in _install.local.yml_:
 |----------|----------|
 | drupal_config_import | Set to true to automatically run `drush config import` |
 | drush | (optional) Path to the Drush command |
-| composer | (optional) Path to the composer command |
 
 Optional configuration, e.g., 
 
     drush: /Users/aklump/.composer/vendor/bin/drush
-    composer: /Users/aklump/bin/composer
 
 ## Scripts
 

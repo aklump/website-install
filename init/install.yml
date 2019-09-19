@@ -1,10 +1,5 @@
 path_to:
 
-  # The directory that contains the composer.json file to manage all
-  # dependencies.  Comment this out if you are not using Composer or wish to
-  # manage your composer dependencies manually.
-  composer: .
-
   # The web root directory.
   web_root: web
 
