@@ -75,7 +75,26 @@ Optional configuration, e.g.,
 
     drush: /Users/aklump/.composer/vendor/bin/drush
     composer: /Users/aklump/bin/composer
+
+## Scripts
+
+You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each must return 0.  Each runs in a subshell.
     
+        ...
+        scripts:
+          pre_install_dev:
+            - mkdir -p web/modules/dev
+            - rm web/modules/dev/se_dev || return 0
+            - cd web/modules/dev/ && ln -s ../../../install/default/modules/se_dev .    
+
+Alternately, you could point to files to be run instead.
+
+        ...
+        scripts:
+          pre_install_dev:
+            - install/scripts/before.sh
+            - install/scripts/before.php
+            
 ## Usage
 
 In the example above we would expect to find the following in source control:
