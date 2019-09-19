@@ -147,6 +147,27 @@ installed_files:
 composer: /Users/aklump/bin/composer
 </code></pre>
 
+<h2>Scripts</h2>
+
+<p>You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each must return 0.  Each runs in a subshell.</p>
+
+<pre><code>    ...
+    scripts:
+      pre_install_dev:
+        - mkdir -p web/modules/dev
+        - rm web/modules/dev/se_dev || return 0
+        - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
+</code></pre>
+
+<p>Alternately, you could point to files to be run instead.</p>
+
+<pre><code>    ...
+    scripts:
+      pre_install_dev:
+        - install/scripts/before.sh
+        - install/scripts/before.php
+</code></pre>
+
 <h2>Usage</h2>
 
 <p>In the example above we would expect to find the following in source control:</p>
@@ -190,7 +211,7 @@ composer: /Users/aklump/bin/composer
 <footer>
   <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.1.2 &bull; Last Updated: Mon, 15 Jul 2019 10:50:14 -0700</p>
+    <p class="legaleeze center">Version: 1.2.0 &bull; Last Updated: Wed, 18 Sep 2019 18:22:12 -0700</p>
   </div>
 </footer>
 
