@@ -6,6 +6,7 @@
 
 - Automatic `composer self-update` (use `scripts` instead)
 - Automatic `composer update`
+- Automatic `drush config-import`
   
 ## [1.4.0] - 2019-09-18
 

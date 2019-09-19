@@ -61,17 +61,6 @@ The basic configuration in _install.yml_ consists of two lists.  The master file
     installed_files:
         - bin/config/install.local.yml
 
-Environment specific options can be set in _install.local.yml_:
-
-| option | description |
-|----------|----------|
-| drupal_config_import | Set to true to automatically run `drush config import` |
-| drush | (optional) Path to the Drush command |
-
-Optional configuration, e.g., 
-
-    drush: /Users/aklump/.composer/vendor/bin/drush
-
 ## Scripts
 
 You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see _install.yml_ for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having `$APP_ROOT` as the working directory.

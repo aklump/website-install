@@ -1,3 +1,0 @@
-
-# Should the script run `drush config-import -y`?
-drupal_config_import: false

@@ -78,16 +78,6 @@ function install_file() {
   return 0
 }
 
-# Echo the major version of drupal.
-#
-# Returns 0 or 1 if indeterminate.
-function get_drupal_version() {
-  local output=$(cd $path_to_web_root && drush status | grep "Drupal version" | awk -F ':' '{print $2}' | sed 's/^ *//')
-  [[ "$output" ]] && [[ "$output" =~ ([0-9]+)\. ]] || return 1
-
-  echo ${BASH_REMATCH[1]}
-}
-
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 # End Cloudy Bootstrap
@@ -110,9 +100,6 @@ exit_with_failure_if_empty_config "path_to.web_root"
 #
 # Load configuration.
 #
-eval $(get_config "drush" $(get_installed "drush"))
-[[ ! "$drush" ]] || is_installed $drush || fail_because "Drush is not installed at \"$drush\"."
-
 has_failed && exit_with_failure
 
 eval $(get_config_path "master_dir")
@@ -120,13 +107,7 @@ exit_with_failure_if_config_is_not_path "master_dir"
 eval $(get_config -a "master_files")
 eval $(get_config_path -a "installed_files")
 
-# Check for drush integration and fail if drush not found.
-eval $(get_config "drupal_config_import" false)
-[[ "$drupal_config_import" == true ]] && exit_with_failure_if_empty_config "drush"
-
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
-
-drupal_major_version=$(get_drupal_version)
 
 command=$(get_command)
 case $command in
@@ -134,10 +115,6 @@ info)
   echo_heading "Settings Info"
   table_clear
   table_set_header "setting" "value"
-  table_add_row "Drupal major version" "$(get_drupal_version)"
-  if [ "$drupal_major_version" -eq 8 ]; then
-    table_add_row "Drush config import" "$drupal_config_import"
-  fi
   echo_slim_table
   exit_with_success "Configuration okay."
   ;;
@@ -168,12 +145,6 @@ for file in "${master_files[@]}"; do
   let index++
 done
 has_option verbose && echo_list && echo
-
-# Update configuration management, except on dev, where it should be handled by the developer.
-if [[ "$drupal_major_version" -eq 8 ]] && [[ "$drupal_config_import" == true ]]; then
-  echo_heading "Importing Drupal configuration"
-  $drush config-import -y || fail_because "Drush config-import failed"
-fi
 
 has_failed && exit_with_failure
 
