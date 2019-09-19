@@ -1,8 +1,3 @@
-path_to:
-
-  # The web root directory.
-  web_root: web
-
 # The directory where the master files will be located.
 master_dir: install/default
 
@@ -13,8 +8,8 @@ master_dir: install/default
 # _.htaccess.staging_,  _.htaccess.prod_ located in the master_dir.
 master_files:
   - .htaccess.__ROLE
-  - install.__ROLE.yml
-  - perms.__ROLE.yml
+  - install.local.__ROLE.yml
+  - perms.local.__ROLE.yml
   - settings.env.__ROLE.php
   - settings.local.__ROLE.php
 

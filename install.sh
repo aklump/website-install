@@ -2,7 +2,7 @@
 
 #
 # @file
-# Lorem ipsum dolar sit amet consectador.
+# Controller for the install project.
 #
 
 # Define the configuration file relative to this script.
@@ -137,7 +137,6 @@ for file in "${master_files[@]}"; do
   let index++
 done
 has_option verbose && echo_list && echo
-
 has_failed && exit_with_failure
 
 list_clear
@@ -146,4 +145,5 @@ event_dispatch "execute_scripts" "post_install"
 event_dispatch "execute_scripts" "post_install_$ROLE"
 has_option verbose && echo_list && echo
 
+has_failed && exit_with_failure
 exit_with_success_elapsed

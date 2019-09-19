@@ -106,7 +106,6 @@ The installation script above will generate the following structure where `.` is
 | Filename | Description | VCS |
 |----------|----------|---|
 | _install.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
-| _install.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
 
 ## Usage
 
