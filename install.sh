@@ -20,23 +20,21 @@ function on_execute_scripts() {
 
   local status
   eval $(get_config_as -a items "scripts.$name")
-  if [[ "${#items[@]}" -gt 0 ]]; then
-    for item in "${items[@]}"; do
-      list_add_item "$item"
-      if [[ -f $item ]]; then
-        (cd "$APP_ROOT" && . "$item")
-        status=$?
-      else
-        (cd "$APP_ROOT" && eval "$item")
-        status=$?
-      fi
-      if [ $status -ne 0 ]; then
-        fail_because "Script exited with $status for: \"$item\"."
-        fail_because "$output"
-        exit_with_failure
-      fi
-    done
-  fi
+  for item in "${items[@]}"; do
+    list_add_item "$item"
+    if [[ -f $item ]]; then
+      (cd "$APP_ROOT" && . "$item")
+      status=$?
+    else
+      (cd "$APP_ROOT" && eval "$item")
+      status=$?
+    fi
+    if [ $status -ne 0 ]; then
+      fail_because "Script exited with $status for: \"$item\"."
+      fail_because "$output"
+      exit_with_failure
+    fi
+  done
 }
 
 ##
