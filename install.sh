@@ -110,15 +110,6 @@ eval $(get_config_path -a "installed_files")
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
 
 command=$(get_command)
-case $command in
-info)
-  echo_heading "Settings Info"
-  table_clear
-  table_set_header "setting" "value"
-  echo_slim_table
-  exit_with_success "Configuration okay."
-  ;;
-esac
 
 #
 # Process for an environment
