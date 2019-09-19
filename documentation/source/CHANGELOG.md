@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.0] - 2019-09-18
+
+### Removed
+- Automatic drupal cache clear.  To achieve this functionality you should now use `scripts`
+
+        scripts:
+          post_install:
+            - cd web && drush cr
+  
 ## [1.3.0] - 2019-09-18
   
 ### Changed

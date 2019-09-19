@@ -204,11 +204,6 @@ if [[ "$drupal_major_version" -eq 8 ]] && [[ "$drupal_config_import" == true ]];
   $drush config-import -y || fail_because "Drush config-import failed"
 fi
 
-echo_heading "Rebuilding Drupal cache"
-clear_command="cache-clear all"
-[[ "$drupal_major_version" -eq 8 ]] && clear_command="rebuild"
-(cd $path_to_web_root && $drush $clear_command) || fail_because "Could not rebuild Drupal cache."
-
 has_failed && exit_with_failure
 
 list_clear
