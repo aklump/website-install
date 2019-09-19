@@ -14,25 +14,13 @@ commands:
     help: 'Clear all cached data.'
   prod:
     help: 'Install in a production environment.'
-    options:
-      verbose:
-        type: boolean
-        help: 'Be more verbose with output.'
-        aliases: [v]
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   staging:
     help: 'Install in a staging environment.'
-    options:
-      verbose:
-        type: boolean
-        help: 'Be more verbose with output.'
-        aliases: [v]
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   dev:
     help: 'Install in a dev environment.'
-    options:
-      verbose:
-        type: boolean
-        help: 'Be more verbose with output.'
-        aliases: [v]
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
   init:
     help: 'Initialize this script''s configuration files.'
 translate:
@@ -42,6 +30,6 @@ translate:
   strings:
     en: ['Installation succeeded.', 'Installation failed.']
 name: 'Website Install'
-version: 1.3.0
+version: 1.3.1
 description: 'A script to help with installing dependencies and deploying non-versioned files for a website.'
 author: 'Aaron Klump <sourcecode@intheloftstudios.com>'
