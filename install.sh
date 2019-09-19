@@ -166,9 +166,9 @@ esac
 ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
 
 list_clear
+echo_heading "Handling early scripts"
 event_dispatch "execute_scripts" "pre_install"
 event_dispatch "execute_scripts" "pre_install_$ROLE"
-list_has_items && echo_heading "Handling early scripts"
 has_option verbose && echo_list && echo
 
 # If the files are not found by environment then we use dev, which is created at the beginning of local development.
@@ -207,9 +207,9 @@ fi
 has_failed && exit_with_failure
 
 list_clear
+echo_heading "Handling late scripts"
 event_dispatch "execute_scripts" "post_install"
 event_dispatch "execute_scripts" "post_install_$ROLE"
-list_has_items && echo_heading "Handling late scripts"
 has_option verbose && echo_list && echo
 
 exit_with_success_elapsed
