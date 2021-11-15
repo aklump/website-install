@@ -22,6 +22,6 @@ translate:
   strings:
     en: ['Installation succeeded.', 'Installation failed.']
 name: 'Website Install'
-version: 1.6.0
+version: 1.6.1
 description: 'A script to help with installing dependencies and deploying non-versioned files for a website.'
 author: 'Aaron Klump <sourcecode@intheloftstudios.com>'

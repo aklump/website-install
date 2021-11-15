@@ -28,15 +28,17 @@
 <h2>[1.6.0] - 2021-11-15</h2>
 
 <ol>
-<li>After upgrading run <code>./bin/install init</code> in each installed environment, this will create <em>bin/config/install.local.yml</em> for that environement.</li>
+<li>After upgrading to 1.6.0, you need to create <em>install.local.yml</em> in each environment.</li>
 <li>Open <em>install.local.yml</em> and update the value for <code>environment</code> as appropriate.</li>
+<li>Run <code>./bin/install cc</code> to pickup the changes.</li>
+<li>Repeat for all environments.</li>
 <li>Continue using as before, omitting the script argument.</li>
 </ol>
 
 <h3>Added</h3>
 
 <ul>
-<li>You must add <code>environment: ENV</code> in <em>bin/config/install.local.yml</em> instead of providing it to the script. Do not commit <em>install.local.yml</em> to version control.</li>
+<li>You must add <code>environment: ENV</code> in <em>bin/config/install.local.yml</em>, replacing <code>ENV</code> with the actual value, instead of providing it to the script. Do not commit <em>install.local.yml</em> to version control.</li>
 </ul>
 
 <h3>Changed</h3>
@@ -118,7 +120,7 @@
 <footer>
   <div class="pager"><a href="index.html" class="prev index">&laquo;Website Install</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="README.html" class="next readme">Website Install&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.6.0 &bull; Last Updated: Mon, 15 Nov 2021 09:23:36 -0800</p>
+    <p class="legaleeze center">Version: 1.6.1 &bull; Last Updated: Mon, 15 Nov 2021 09:34:15 -0800</p>
   </div>
 </footer>
 
