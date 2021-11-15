@@ -106,13 +106,13 @@ eval $(get_config_path -a "installed_files")
 
 [ ${#master_files[@]} -ne ${#installed_files[@]} ] && exit_with_failure "Configuration problem.  The number of items in \"master_files\" must equal the number of items in \"installed_files\"."
 
-command=$(get_command)
-
 #
 # Process for an environment
 #
-
-ROLE=$command || exit_with_failure "Call with: prod, dev, or staging."
+eval $(get_config_as ROLE environment)
+if [[ ! "$ROLE" ]]; then
+  exit_with_failure "Missing config value for 'environment'; should be one of: dev, test, staging, live, or prod.  Check config/install.local.yml."
+fi
 
 echo_title "Installation environment: $ROLE"
 

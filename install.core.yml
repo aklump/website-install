@@ -3,24 +3,16 @@ config_path_base: ../../..
 additional_config:
   - bin/config/install.yml
   - bin/config/install.local.yml
-default_command: help
+default_command: install
 commands:
   help:
     help: 'Show this help screen.'
   clear-cache:
-    aliases: [clearcache, cc]
+    aliases: [ clearcache, cc ]
     help: 'Clear all cached data.'
-  dev:
+  install:
     help: 'Install in a dev environment.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
-  staging:
-    aliases: [test]
-    help: 'Install in a staging environment.  While you may call this with \`test\` your source files will need to be named using \`staging\`.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
-  prod:
-    aliases: [live]
-    help: 'Install in a production environment.  While you may call this with \`test\` your source files will need to be named using \`prod\`.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
+    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [ v ] } }
   init:
     help: 'Initialize this script''s configuration files.'
 translate:
@@ -28,7 +20,7 @@ translate:
     - 'Completed successfully.'
     - Failed.
   strings:
-    en: ['Installation succeeded.', 'Installation failed.']
+    en: [ 'Installation succeeded.', 'Installation failed.' ]
 name: 'Website Install'
 version: 1.5.3
 description: 'A script to help with installing dependencies and deploying non-versioned files for a website.'
