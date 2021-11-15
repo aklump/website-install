@@ -2,13 +2,15 @@
 
 ## [1.6.0] - 2021-11-15
 
-1. After upgrading run `./bin/install init` in each installed environment, this will create _bin/config/install.local.yml_ for that environement.
+1. After upgrading to 1.6.0, you need to create _install.local.yml_ in each environment.
 2. Open _install.local.yml_ and update the value for `environment` as appropriate.
-3. Continue using as before, omitting the script argument.
+3. Run `./bin/install cc` to pickup the changes.
+4. Repeat for all environments.
+5. Continue using as before, omitting the script argument.
 
 ### Added
 
-- You must add `environment: ENV` in _bin/config/install.local.yml_ instead of providing it to the script. Do not commit _install.local.yml_ to version control.
+- You must add `environment: ENV` in _bin/config/install.local.yml_, replacing `ENV` with the actual value, instead of providing it to the script. Do not commit _install.local.yml_ to version control.
 
 ### Changed
 
