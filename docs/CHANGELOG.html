@@ -25,6 +25,32 @@
 
 <section>
 
+<h2>[1.6.0] - 2021-11-15</h2>
+
+<ol>
+<li>After upgrading run <code>./bin/install init</code> in each installed environment, this will create <em>bin/config/install.local.yml</em> for that environement.</li>
+<li>Open <em>install.local.yml</em> and update the value for <code>environment</code> as appropriate.</li>
+<li>Continue using as before, omitting the script argument.</li>
+</ol>
+
+<h3>Added</h3>
+
+<ul>
+<li>You must add <code>environment: ENV</code> in <em>bin/config/install.local.yml</em> instead of providing it to the script. Do not commit <em>install.local.yml</em> to version control.</li>
+</ul>
+
+<h3>Changed</h3>
+
+<ul>
+<li>How local environment is identified.</li>
+</ul>
+
+<h3>Removed</h3>
+
+<ul>
+<li>Environment as a command argument. Instead of calling <code>./bin/install dev</code>, you now just call <code>./bin/install</code> after having added <code>environment: dev</code> to <em>bin/config/install.local.yml</em>.</li>
+</ul>
+
 <h2>[1.5.0] - 2019-09-19</h2>
 
 <h3>Removed</h3>
@@ -50,7 +76,7 @@
 <h3>Removed</h3>
 
 <ul>
-<li><p>Automatic drupal cache clear.  To achieve this functionality you should now use <code>scripts</code></p>
+<li><p>Automatic drupal cache clear. To achieve this functionality you should now use <code>scripts</code></p>
 
 <pre><code>scripts:
   post_install:
@@ -63,7 +89,7 @@
 <h3>Changed</h3>
 
 <ul>
-<li><p>If you wish to run the permission script as part of an installation then you should use the new <code>scripts</code> option.  Add the following to your configuration to achieve the previous built-in functionality.</p>
+<li><p>If you wish to run the permission script as part of an installation then you should use the new <code>scripts</code> option. Add the following to your configuration to achieve the previous built-in functionality.</p>
 
 <pre><code>scripts:
   post_install:
@@ -81,7 +107,7 @@
 <h2>[1.1.0]</h2>
 
 <ul>
-<li>To manage Composer dependencies you must add the <code>path_to.composer</code> value.  See <em>init/install.yml</em> for an example.</li>
+<li>To manage Composer dependencies you must add the <code>path_to.composer</code> value. See <em>init/install.yml</em> for an example.</li>
 </ul>
 </section>
 
@@ -92,7 +118,7 @@
 <footer>
   <div class="pager"><a href="index.html" class="prev index">&laquo;Website Install</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="README.html" class="next readme">Website Install&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.5.3 &bull; Last Updated: Thu, 19 Sep 2019 15:04:53 -0700</p>
+    <p class="legaleeze center">Version: 1.6.0 &bull; Last Updated: Mon, 15 Nov 2021 09:23:36 -0800</p>
   </div>
 </footer>
 

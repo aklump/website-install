@@ -29,20 +29,18 @@
 
 <h2>Summary</h2>
 
-<p>Provides a single command <code>install &lt;role&gt;</code> to make sure your website is ready to go.</p>
-
 <ul>
+<li>Wraps repeated and multiple deployment tasks into one, convenient command.</li>
 <li>Simplifies the management of non-versioned files (settings, composer dependencies, etc.) for the different website environments, dev, staging, prod.</li>
 <li>Consists of two elements: scripts and files.</li>
 <li>May be executed as often as you like, as it simple ensures that everything is updated and in place.</li>
-<li>Encapsulates disparate commands under a single command.</li>
 </ul>
 
 <h3>Scripts</h3>
 
-<p>The configuration allows you to setup commands or scripts to run per environment so that when for example, you call <code>install dev</code>, the development scripts only will fire.  As a suggestion, only include scripts and commands that support the aim of this project, that is to put files and state in place so that your website is ready.  You can use these to do things like:</p>
+<p>The configuration allows you to setup commands or scripts to run per environment so that when for example, you call <code>install dev</code>, the development scripts only will fire. As a suggestion, only include scripts and commands that support the aim of this project, that is to put files and state in place so that your website is ready. You can use these to do things like:</p>
 
-<pre><code>drush cr
+<pre><code class="bash">drush cr
 composer install
 drush config-import
 drush updb
@@ -50,9 +48,9 @@ drush updb
 git pull
 </code></pre>
 
-<p>If you are using Composer to manage dependencies, you can add the appropriate <code>composer install</code> command to the <code>scripts</code> configuration and then calling <code>install &lt;role&gt;</code> will grab the dependencies as well.  You might do something like this so that production does not get dev dependencies.</p>
+<p>If you are using Composer to manage dependencies, you can add the appropriate <code>composer install</code> command to the <code>scripts</code> configuration and then calling <code>install &lt;role&gt;</code> will grab the dependencies as well. You might do something like this so that production does not get dev dependencies.</p>
 
-<pre><code>scripts:
+<pre><code class="yaml">scripts:
   post_install_staging:
     - composer install --no-dev
   post_install_prod:
@@ -63,36 +61,34 @@ git pull
 
 <h4>Configuration</h4>
 
-<p>In <em>install.yml</em> are the script definitions.  You may run specific bash commands before or after installation, for all or a given environment.  Use the script configuration, see <em>install.yml</em> for how this works.  This example runs three commands before installing in the dev environment.  Each line must return 0 or installation will fail.  Each line runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
+<p>In <em>install.yml</em> are the script definitions. You may run specific bash commands before or after installation, for all or a given environment. Use the script configuration, see <em>install.yml</em> for how this works. This example runs three commands before installing in the dev environment. Each line must return 0 or installation will fail. Each line runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
 
-<pre><code>    ...
-    scripts:
-      pre_install_dev:
-        - mkdir -p web/modules/dev
-        - rm web/modules/dev/se_dev || return 0
-        - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
+<pre><code class="yaml">scripts:
+  pre_install_dev:
+    - mkdir -p web/modules/dev
+    - rm web/modules/dev/se_dev || return 0
+    - cd web/modules/dev/ &amp;&amp; ln -s ../../../install/default/modules/se_dev .    
 </code></pre>
 
-<p>Alternately, you could point to files to be run instead.  Each file must exit with 0 or installation will fail.  Each file runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
+<p>Alternately, you could point to files to be run instead. Each file must exit with 0 or installation will fail. Each file runs in a separate subshell having <code>$APP_ROOT</code> as the working directory.</p>
 
-<pre><code>    ...
-    scripts:
-      pre_install_dev:
-        - install/scripts/before.sh
-        - install/scripts/before.php
+<pre><code class="yaml">scripts:
+  pre_install_dev:
+    - install/scripts/before.sh
+    - install/scripts/before.php
 </code></pre>
 
 <h3>Files</h3>
 
-<p>The files element gives you the ability to define environment-specific files, which are then copied to the correct location when running <code>install &lt;role&gt;</code>.  For example, a Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc.  This project provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
+<p>The files element gives you the ability to define environment-specific files, which are then copied to the correct location when running <code>install &lt;role&gt;</code>. For example, a Drupal website has files that do not end up in version control: <em>.htaccess, settings.local.php</em>, etc. This project provides a means of putting those in source control by storing environment-specific versions of them in a directory and then copying the appropriate version to it's runtime location.</p>
 
 <p>If a file already exists in it's runtime location, nothing happens, but if it's missing then the file is copied from the appropriate environment source.</p>
 
 <h4>Configuration</h4>
 
-<p>The basic configuration in <em>install.yml</em> consists of two lists.  The master files and the destination paths.  Notice the use of the token <code>__ROLE</code>, which will be substituted for the role.  You must have the same number of items in each list.</p>
+<p>The basic configuration in <em>install.yml</em> consists of two lists. The master files and the destination paths. Notice the use of the token <code>__ROLE</code>, which will be substituted for the role. You must have the same number of items in each list.</p>
 
-<pre><code>master_dir: install/default
+<pre><code class="yaml">master_dir: install/default
 master_files:
     - install.__ROLE.yml
 installed_files:
@@ -107,6 +103,7 @@ installed_files:
 <li>Install in your repository root using <code>cloudy pm-install aklump/install</code>.</li>
 <li>Create your <code>master_dir</code> to hold your source files, e.g. <em>install/default/</em>.</li>
 <li>Place source files in this folder.</li>
+<li>Open <em>bin/config/install.local.yml</em> and define your environment; do not add this file to source control.</li>
 <li>Open <em>bin/config/install.yml</em> and map your files.</li>
 <li>Define any scripts that you would like to associate with an environment.</li>
 </ul>
@@ -119,7 +116,7 @@ installed_files:
 
 <p>The installation script above will generate the following structure where <code>.</code> is your repository root.</p>
 
-<pre><code>.
+<pre><code class="text">.
 ├── bin
 │   ├── install -&gt; ../opt/install/install.sh
 │   └── config
@@ -150,6 +147,11 @@ installed_files:
 </thead>
 <tbody>
 <tr>
+  <td><em>install.local.yml</em></td>
+  <td>Defines the local environment</td>
+  <td>no</td>
+</tr>
+<tr>
   <td><em>install.yml</em></td>
   <td>Configuration shared across all server environments: prod, staging, dev</td>
   <td>yes</td>
@@ -161,7 +163,7 @@ installed_files:
 
 <p>In the example above we would expect to find the following in source control:</p>
 
-<pre><code>.
+<pre><code class="text">.
 ├── bin
 │   └── config
 └── install
@@ -169,11 +171,11 @@ installed_files:
         ├── install.dev.yml
         ├── install.prod.yml
         └── install.staging.yml
+
+When we ran this script with `prod` then we would have the following, where _bin/config/install.local.yml_ is a copy of _install/default/install.prod.yml_.
 </code></pre>
 
-<p>When we ran this script with <code>prod</code> then we would have the following, where <em>bin/config/install.local.yml</em> is a copy of <em>install/default/install.prod.yml</em>.</p>
-
-<pre><code>.
+<pre><code class="text">.
 ├── bin
 │   └── config
 │       └── install.local.yml
@@ -200,7 +202,7 @@ installed_files:
 <footer>
   <div class="pager"><a href="CHANGELOG.html" class="prev CHANGELOG">&laquo;Changelog</a><a href="index.html" class="index pager__book-title">Website Install</a><a href="index.html" class="next index">Index&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.5.3 &bull; Last Updated: Thu, 19 Sep 2019 15:04:53 -0700</p>
+    <p class="legaleeze center">Version: 1.6.0 &bull; Last Updated: Mon, 15 Nov 2021 09:23:37 -0800</p>
   </div>
 </footer>
 
