@@ -8,11 +8,18 @@ commands:
   help:
     help: 'Show this help screen.'
   clear-cache:
-    aliases: [clearcache, cc]
+    aliases:
+      - clearcache
+      - cc
     help: 'Clear all cached data.'
   install:
     help: 'Install in a dev environment.'
-    options: { verbose: { type: boolean, help: 'Be more verbose with output.', aliases: [v] } }
+    options:
+      verbose:
+        type: boolean
+        help: 'Be more verbose with output.'
+        aliases:
+          - v
   init:
     help: 'Initialize this script''s configuration files.'
 translate:
@@ -20,8 +27,10 @@ translate:
     - 'Completed successfully.'
     - Failed.
   strings:
-    en: ['Installation succeeded.', 'Installation failed.']
+    en:
+      - 'Installation succeeded.'
+      - 'Installation failed.'
 name: 'Website Install'
-version: 1.6.1
+version: 1.6.2
 description: 'A script to help with installing dependencies and deploying non-versioned files for a website.'
 author: 'Aaron Klump <sourcecode@intheloftstudios.com>'
